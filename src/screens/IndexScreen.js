@@ -1,18 +1,25 @@
 import React,{useContext} from 'react';
-import {Text,View,StyleSheet,Button,FlatList} from 'react-native';
-import BlogContext from '../context/BlogContext';
-const IndexScreen = () =>{
-    const {data,addBlogPost} = useContext(BlogContext); 
+import {Text,View,StyleSheet,Button,FlatList,TouchableOpacity} from 'react-native';
+import {Context} from '../context/BlogContext';
+import Icon from 'react-native-vector-icons/Feather';
+const IndexScreen = ({navigation}) =>{
+    const {state,addBlogPost,deleteBlogPost} = useContext(Context); 
     return(
         <View>
-            <Text>Index Screen</Text>
-            <Button title="Add Post" onPress={()=>addBlogPost()}/>
+            <Button title="Add Post" onPress={addBlogPost}/>
             <FlatList
-                data={data}
+                data={state}
                 keyExtractor={item=>item.title}
                 renderItem={({item})=>{
                     return(
-                        <Text>{item.title}</Text>
+                        <TouchableOpacity onPress={()=>navigation.navigate('Show',{id:item.id})}>
+                            <View style={styles.row}>
+                                <Text style={styles.title}>{item.title} - {item.id}</Text>
+                                <TouchableOpacity onPress={()=>deleteBlogPost(item.id)}>
+                                    <Icon name="trash" size={24} color="black"/>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
                     )
                 }
                 }
@@ -21,6 +28,16 @@ const IndexScreen = () =>{
     )
 };
 const styles = StyleSheet.create({
-
+    row:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        paddingVertical:20,
+        paddingHorizontal:15,
+        borderTopWidth:1,
+        borderColor:'grey'
+    },
+    title:{
+        fontSize:24
+    }
 });
 export default IndexScreen;
