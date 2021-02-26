@@ -3,10 +3,9 @@ import {Text,View,StyleSheet,Button,FlatList,TouchableOpacity} from 'react-nativ
 import {Context} from '../context/BlogContext';
 import Icon from 'react-native-vector-icons/Feather';
 const IndexScreen = ({navigation}) =>{
-    const {state,addBlogPost,deleteBlogPost} = useContext(Context); 
+    const {state,deleteBlogPost} = useContext(Context); 
     return(
         <View>
-            <Button title="Add Post" onPress={addBlogPost}/>
             <FlatList
                 data={state}
                 keyExtractor={item=>item.title}
@@ -14,7 +13,7 @@ const IndexScreen = ({navigation}) =>{
                     return(
                         <TouchableOpacity onPress={()=>navigation.navigate('Show',{id:item.id})}>
                             <View style={styles.row}>
-                                <Text style={styles.title}>{item.title} - {item.id}</Text>
+                                <Text style={styles.title}>{item.title} </Text>
                                 <TouchableOpacity onPress={()=>deleteBlogPost(item.id)}>
                                     <Icon name="trash" size={24} color="black"/>
                                 </TouchableOpacity>
@@ -26,6 +25,13 @@ const IndexScreen = ({navigation}) =>{
             />
         </View>
     )
+};
+IndexScreen.navigationOptions = ({ navigation }) =>{
+    return {
+        headerRight: () => <TouchableOpacity onPress={()=> navigation.navigate('Create')}>
+            <Icon name="plus" size={24} color="black" />
+        </TouchableOpacity>
+    };
 };
 const styles = StyleSheet.create({
     row:{
